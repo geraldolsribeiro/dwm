@@ -56,7 +56,7 @@ done
 sed -i "s/^#\(XRENDER = -lXrender\)/\1/" \
   dwm-flexipatch/config.mk
 
-sed -i "s/\(static const char *termcmd\[\]\).*/\1 = { \"xfce4-terminal\", NULL };/" \
+sed -i "s/\(static const char \*termcmd\[\]\).*/\1 = { \"xfce4-terminal\", NULL };/" \
   dwm-flexipatch/config.h
 
 sed -i "s/\(static const unsigned int gappov\).*/\1 = 10;/" \
