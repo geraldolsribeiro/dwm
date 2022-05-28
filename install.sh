@@ -53,6 +53,8 @@ sed -i "s/^#\(XRENDER = -lXrender\)/\1/" \
 sed -i "s/\(static const char *termcmd\[\]\).*/\1 = { \"xfce4-terminal\", NULL };/" \
   dwm-flexipatch/config.h
 
+sed -i "s/\(static const unsigned int gappov\).*/\1 = 10;/" \
+  dwm-flexipatch/config.h
 
 #static const char *roficmd[] = { "rofi", "-show", "combi", "-show-icons", NULL };
 
