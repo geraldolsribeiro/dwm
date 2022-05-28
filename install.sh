@@ -59,5 +59,13 @@ chmod 755 flexipatch-finalizer/flexipatch-finalizer.sh
   -r -d ~/git/github/dwm/dwm-flexipatch/ \
   -o ~/git/github/dwm/dwm
 
+cp dwm.desktop dwm/
+
+cat <<EOF >> dwm/Makefile
+
+post_install:
+	cp dwm.desktop /usr/share/xsessions/dwm.desktop
+EOF
+
 make -C dwm clean all
-sudo make -C dwm install
+sudo make -C dwm install post_install
