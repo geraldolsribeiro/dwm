@@ -1,13 +1,18 @@
 #!/bin/bash
 
-rm -rf dwm-flexipatch/
 rm -rf flexipatch-finalizer/
+rm -rf dwm-flexipatch/
+rm -rf dmenu-flexipatch/
 
 git submodule update --init --recursive
 
+chmod 755 flexipatch-finalizer/flexipatch-finalizer.sh
+
 # Copy default headers
-cp dwm-flexipatch/patches{.def,}.h
 cp dwm-flexipatch/config{.def,}.h
+cp dwm-flexipatch/patches{.def,}.h
+cp dmenu-flexipatch/config{.def,}.h
+cp dmenu-flexipatch/patches{.def,}.h
 
 # Enable some patches
 for i in \
@@ -51,10 +56,7 @@ sed -i "s/\(static const char *termcmd\[\]\).*/\1 = { \"xfce4-terminal\", NULL }
 
 #static const char *roficmd[] = { "rofi", "-show", "combi", "-show-icons", NULL };
 
-# make -C dwm-flexipatch/ clean all
-# sudo make -C dwm-flexipatch/ install
 
-chmod 755 flexipatch-finalizer/flexipatch-finalizer.sh
 ./flexipatch-finalizer/flexipatch-finalizer.sh \
   -r -d ~/git/github/dwm/dwm-flexipatch/ \
   -o ~/git/github/dwm/dwm
@@ -67,5 +69,32 @@ post_install:
 	cp dwm.desktop /usr/share/xsessions/dwm.desktop
 EOF
 
+# -------
+
+for i in \
+ ALPHA_PATCH \
+ BORDER_PATCH \
+ CASEINSENSITIVE_PATCH \
+ CENTER_PATCH \
+ COLOR_EMOJI_PATCH \
+ CTRL_V_TO_PASTE_PATCH \
+ FUZZYMATCH_PATCH \
+ FUZZYHIGHLIGHT_PATCH \
+ 
+do
+  sed -i "s/^#define $i [01]/#define $i 1/" \
+    dmenu-flexipatch/patches.h
+done
+
+./flexipatch-finalizer/flexipatch-finalizer.sh \
+  -r -d ~/git/github/dwm/dmenu-flexipatch/ \
+  -o ~/git/github/dwm/dmenu
+
+# -------
+
 make -C dwm clean all
 sudo make -C dwm install post_install
+
+make -C dmenu clean all
+sudo make -C dmenu install
+

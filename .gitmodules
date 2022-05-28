@@ -4,3 +4,6 @@
 [submodule "flexipatch-finalizer"]
 	path = flexipatch-finalizer
 	url = https://github.com/bakkeby/flexipatch-finalizer.git
+[submodule "dmenu-flexipatch"]
+	path = dmenu-flexipatch
+	url = git@github.com:bakkeby/dmenu-flexipatch.git

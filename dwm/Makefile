@@ -67,5 +67,6 @@ uninstall:
 		${DESTDIR}${MANPREFIX}/man1/dwm.1
 
 .PHONY: all options clean dist install uninstall
+
 post_install:
 	cp dwm.desktop /usr/share/xsessions/dwm.desktop
