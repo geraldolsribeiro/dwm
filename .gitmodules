@@ -7,3 +7,6 @@
 [submodule "dmenu-flexipatch"]
 	path = dmenu-flexipatch
 	url = git@github.com:bakkeby/dmenu-flexipatch.git
+[submodule "slock-flexipatch"]
+	path = slock-flexipatch
+	url = git@github.com:bakkeby/slock-flexipatch.git

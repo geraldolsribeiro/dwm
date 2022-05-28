@@ -3,6 +3,7 @@
 rm -rf flexipatch-finalizer/
 rm -rf dwm-flexipatch/
 rm -rf dmenu-flexipatch/
+rm -rf slock-flexipatch/
 
 git submodule update --init --recursive
 
@@ -13,6 +14,10 @@ cp dwm-flexipatch/config{.def,}.h
 cp dwm-flexipatch/patches{.def,}.h
 cp dmenu-flexipatch/config{.def,}.h
 cp dmenu-flexipatch/patches{.def,}.h
+cp slock-flexipatch/patches{.def,}.h
+cp slock-flexipatch/config{.def,}.h
+
+# -------
 
 # Enable some patches
 for i in \
@@ -41,7 +46,8 @@ TAGOTHERMONITOR_PATCH \
 VANITYGAPS_PATCH \
 GRIDMODE_LAYOUT \
 TILE_LAYOUT \
-MONOCLE_LAYOUT
+MONOCLE_LAYOUT \
+
 do
   sed -i "s/^#define $i [01]/#define $i 1/" \
     dwm-flexipatch/patches.h
@@ -82,7 +88,7 @@ for i in \
  CTRL_V_TO_PASTE_PATCH \
  FUZZYMATCH_PATCH \
  FUZZYHIGHLIGHT_PATCH \
- 
+
 do
   sed -i "s/^#define $i [01]/#define $i 1/" \
     dmenu-flexipatch/patches.h
@@ -94,9 +100,35 @@ done
 
 # -------
 
+for i in \
+ ALPHA_PATCH \
+ AUTO_TIMEOUT_PATCH \
+ COLOR_MESSAGE_PATCH \
+ DWM_LOGO_PATCH \
+ QUICKCANCEL_PATCH \
+
+do
+  sed -i "s/^#define $i [01]/#define $i 1/" \
+    slock-flexipatch/patches.h
+done
+
+sed -i "s/^#\(XINERAMA=-lXinerama\)/\1/" \
+  slock-flexipatch/config.mk
+
+sed -i "s/^#\(XINERAMAFLAGS = -DXINERAMA\)/\1/" \
+  slock-flexipatch/config.mk
+
+./flexipatch-finalizer/flexipatch-finalizer.sh \
+  -r -d ~/git/github/dwm/slock-flexipatch/ \
+  -o ~/git/github/dwm/slock
+
+# -------
+
 make -C dwm clean all
 sudo make -C dwm install post_install
 
 make -C dmenu clean all
 sudo make -C dmenu install
 
+make -C slock clean all
+sudo make -C slock install
