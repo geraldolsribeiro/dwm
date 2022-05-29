@@ -1,1 +1,5 @@
-# dwm
+# Dynamic Window Manager
+
+My configuration.
+
+

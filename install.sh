@@ -1,9 +1,9 @@
 #!/bin/bash
 
-rm -rf flexipatch-finalizer/
-rm -rf dwm-flexipatch/
-rm -rf dmenu-flexipatch/
-rm -rf slock-flexipatch/
+# rm -rf flexipatch-finalizer/
+# rm -rf dwm-flexipatch/
+# rm -rf dmenu-flexipatch/
+# rm -rf slock-flexipatch/
 
 git submodule update --init --recursive
 
@@ -124,6 +124,10 @@ sed -i "s/^#\(XINERAMAFLAGS = -DXINERAMA\)/\1/" \
 
 # -------
 
+cp blocks.h dwmblocks/
+
+# -------
+
 make -C dwm clean all
 sudo make -C dwm install post_install
 
@@ -132,3 +136,7 @@ sudo make -C dmenu install
 
 make -C slock clean all
 sudo make -C slock install
+
+make -C dwmblocks/ clean all
+sudo make -C dwmblocks install
+
