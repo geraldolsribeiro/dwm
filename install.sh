@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# https://gist.github.com/palopezv/efd34059af6126ad970940bcc6a90f2e
+# palopezv/dwm_config_pulseaudio.h
+
 rm -rf flexipatch-finalizer/
 rm -rf dwm-flexipatch/
 rm -rf dmenu-flexipatch/
@@ -23,7 +26,7 @@ cp dmenu-flexipatch/config{.def,}.h
 cp dmenu-flexipatch/patches{.def,}.h
 cp slock-flexipatch/patches{.def,}.h
 cp slock-flexipatch/config{.def,}.h
-cp dwmblocks/config{.def,}.h
+#cp dwmblocks/config{.def,}.h
 
 # -------
 
@@ -176,10 +179,10 @@ sed -i "s/^#\(XINERAMAFLAGS = -DXINERAMA\)/\1/" \
 
 # -------
 
-# cp blocks.h dwmblocks/
+cp blocks.h dwmblocks/
 
-sed -i "s|\(#define PATH(name) \).*|\1 \"/home/geraldo/bin/\" name|" \
-  dwmblocks/config.h
+# sed -i "s|\(#define PATH(name) \).*|\1 \"/home/geraldo/bin/\" name|" \
+#   dwmblocks/config.h
 
 # -------
 
