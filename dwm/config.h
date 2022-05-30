@@ -26,8 +26,8 @@ static const int showsystray             = 1;   /* 0 means no systray */
 static int tagindicatortype              = INDICATOR_TOP_LEFT_SQUARE;
 static int tiledindicatortype            = INDICATOR_NONE;
 static int floatindicatortype            = INDICATOR_TOP_LEFT_SQUARE;
-static const char *fonts[]               = { "monospace:size=10" };
-static const char dmenufont[]            = "monospace:size=10";
+static const char *fonts[]               = { "Fira Code:style=Regular:size=12", "Material Design Icons Desktop:style=Regular:size=10" };
+static const char dmenufont[]            =  "Fira Code:style=Regular:size=12";
 
 static char c000000[]                    = "#000000"; // placeholder value
 
@@ -240,7 +240,7 @@ static const char *dmenucmd[] = {
 	"-sf", selfgcolor,
 	NULL
 };
-static const char *termcmd[] = { "xfce4-terminal", NULL };
+static const char *termcmd[]  = { "xfce4-terminal", NULL };
 
 /* This defines the name of the executable that handles the bar (used for signalling purposes) */
 #define STATUSBAR "dwmblocks"

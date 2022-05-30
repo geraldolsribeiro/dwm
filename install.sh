@@ -1,11 +1,18 @@
 #!/bin/bash
 
-# rm -rf flexipatch-finalizer/
-# rm -rf dwm-flexipatch/
-# rm -rf dmenu-flexipatch/
-# rm -rf slock-flexipatch/
+rm -rf flexipatch-finalizer/
+rm -rf dwm-flexipatch/
+rm -rf dmenu-flexipatch/
+rm -rf slock-flexipatch/
+rm -rf dwmblocks/
 
 git submodule update --init --recursive
+
+# ainda não sei como aplicar este patch para
+# preservar as tags entre os restarts
+if [ ! -f dwm-preserveonrestart-6.3.diff ]; then
+ wget https://raw.githubusercontent.com/PhyTech-R0/dwm-phyOS/master/patches/dwm-6.3-patches/dwm-preserveonrestart-6.3.diff
+fi
 
 chmod 755 flexipatch-finalizer/flexipatch-finalizer.sh
 
@@ -16,6 +23,7 @@ cp dmenu-flexipatch/config{.def,}.h
 cp dmenu-flexipatch/patches{.def,}.h
 cp slock-flexipatch/patches{.def,}.h
 cp slock-flexipatch/config{.def,}.h
+cp dwmblocks/config{.def,}.h
 
 # -------
 
@@ -53,11 +61,37 @@ do
     dwm-flexipatch/patches.h
 done
 
-sed -i "s/^#\(XRENDER = -lXrender\)/\1/" \
+sed -i "s/^#\(XRENDER\)/\1/" \
   dwm-flexipatch/config.mk
 
-sed -i "s/\(static const char \*termcmd\[\]\).*/\1 = { \"xfce4-terminal\", NULL };/" \
+# sed -i "s/^#\(PANGOINC\)/\1/" \
+#   dwm-flexipatch/config.mk
+#
+# sed -i "s/^#\(PANGOLIB\)/\1/" \
+#   dwm-flexipatch/config.mk
+
+sed -i "s/\(static const char \*termcmd\[\] *= \).*/\1{ \"xfce4-terminal\", NULL };/" \
   dwm-flexipatch/config.h
+
+
+# sed -i "s/\(static const char \*fonts\[\]\).*/\1 = { \"monospace:size=12\", \"siji:pixelsize=12:antialias=false,autohint=false\" };/" \
+#   dwm-flexipatch/config.h
+
+# sed -i "s/\(static const char \*fonts\[\] *= \).*/\1{ \"JetBrainsMono Nerd Font Mono:style=Regular:size=12\", \"Material Design Icons Desktop:style=Regular:size=10\" };/" \
+#   dwm-flexipatch/config.h
+
+sed -i "s/\(static const char \*fonts\[\] *= \).*/\1{ \"Fira Code:style=Regular:size=12\", \"Material Design Icons Desktop:style=Regular:size=10\" };/" \
+  dwm-flexipatch/config.h
+
+# sed -i "s/\(static const char dmenufont\[\] *= \).*/\1 \"JetBrainsMono Nerd Font Mono:style=Regular:size=12\";/"\
+#   dwm-flexipatch/config.h
+
+sed -i "s/\(static const char dmenufont\[\] *= \).*/\1 \"Fira Code:style=Regular:size=12\";/"\
+  dwm-flexipatch/config.h
+
+
+
+# https://www.nerdfonts.com/cheat-sheet
 
 sed -i "s/\(static const unsigned int gappov\).*/\1 = 10;/" \
   dwm-flexipatch/config.h
@@ -71,11 +105,29 @@ sed -i "s/\(static const unsigned int gappov\).*/\1 = 10;/" \
 
 cp dwm.desktop dwm/
 
+
+# https://owl.eu.com/posts/debian-demystified-installing-bitmap-fonts.html
+cat <<EOF > dwm-flexipatch/50-enable-siji.conf
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+  <selectfont>
+    <acceptfont>
+      <pattern>
+        <patelt name="family"><string>siji</string></patelt>
+      </pattern>
+    </acceptfont>
+  </selectfont>
+</fontconfig>
+EOF
+# cp 50-enable-siji.conf /etc/fonts/conf.avail/50-enable-siji.conf
+
 cat <<EOF >> dwm/Makefile
 
 post_install:
 	cp dwm.desktop /usr/share/xsessions/dwm.desktop
 EOF
+
 
 # -------
 
@@ -124,7 +176,10 @@ sed -i "s/^#\(XINERAMAFLAGS = -DXINERAMA\)/\1/" \
 
 # -------
 
-cp blocks.h dwmblocks/
+# cp blocks.h dwmblocks/
+
+sed -i "s|\(#define PATH(name) \).*|\1 \"/home/geraldo/bin/\" name|" \
+  dwmblocks/config.h
 
 # -------
 
