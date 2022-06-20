@@ -110,6 +110,7 @@ enum {
 	WMLast
 }; /* default atoms */
 
+
 enum {
 	ClkButton,
 	ClkTagBar,
@@ -291,7 +292,7 @@ static void focus(Client *c);
 static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
-static Atom getatomprop(Client *c, Atom prop);
+static Atom getatomprop(Client *c, Atom prop, Atom req);
 static int getrootptr(int *x, int *y);
 static long getstate(Window w);
 static int gettextprop(Window w, Atom atom, char *text, unsigned int size);
@@ -391,7 +392,8 @@ static void (*handler[LASTEvent]) (XEvent *) = {
 	[ResizeRequest] = resizerequest,
 	[UnmapNotify] = unmapnotify
 };
-static Atom wmatom[WMLast], netatom[NetLast], xatom[XLast];
+static Atom wmatom[WMLast], netatom[NetLast];
+static Atom xatom[XLast];
 static int running = 1;
 static Cur *cursor[CurLast];
 static Clr **scheme;
@@ -425,7 +427,7 @@ applyrules(Client *c)
 	XGetClassHint(dpy, c->win, &ch);
 	class    = ch.res_class ? ch.res_class : broken;
 	instance = ch.res_name  ? ch.res_name  : broken;
-	wintype  = getatomprop(c, netatom[NetWMWindowType]);
+	wintype  = getatomprop(c, netatom[NetWMWindowType], XA_ATOM);
 
 
 	for (i = 0; i < LENGTH(rules); i++) {
@@ -906,6 +908,8 @@ createmon(void)
 	}
 
 
+
+
 	return m;
 }
 
@@ -930,6 +934,7 @@ detach(Client *c)
 
 	for (tc = &c->mon->clients; *tc && *tc != c; tc = &(*tc)->next);
 	*tc = c->next;
+	c->next = NULL;
 }
 
 void
@@ -944,6 +949,7 @@ detachstack(Client *c)
 		for (t = c->mon->stack; t && !ISVISIBLE(t); t = t->snext);
 		c->mon->sel = t;
 	}
+	c->snext = NULL;
 }
 
 Monitor *
@@ -1210,19 +1216,18 @@ focusstack(const Arg *arg)
 }
 
 Atom
-getatomprop(Client *c, Atom prop)
+getatomprop(Client *c, Atom prop, Atom req)
 {
 	int di;
 	unsigned long dl;
 	unsigned char *p = NULL;
 	Atom da, atom = None;
 
-	/* FIXME getatomprop should return the number of items and a pointer to
-	 * the stored data instead of this workaround */
-	Atom req = XA_ATOM;
 	if (prop == xatom[XembedInfo])
 		req = xatom[XembedInfo];
 
+	/* FIXME getatomprop should return the number of items and a pointer to
+	 * the stored data instead of this workaround */
 	if (XGetWindowProperty(dpy, c->win, prop, 0L, sizeof atom, False, req,
 		&da, &di, &dl, &dl, &p) == Success && p) {
 		atom = *(Atom *)p;
@@ -1425,7 +1430,7 @@ manage(Window w, XWindowAttributes *wa)
 		XSetWindowBorder(dpy, w, scheme[SchemeNorm][ColBorder].pixel);
 	configure(c); /* propagates border_width, if size doesn't change */
 	updatesizehints(c);
-	if (getatomprop(c, netatom[NetWMState]) == netatom[NetWMFullscreen])
+	if (getatomprop(c, netatom[NetWMState], XA_ATOM) == netatom[NetWMFullscreen])
 		setfullscreen(c, 1);
 	updatewmhints(c);
 
@@ -1516,8 +1521,8 @@ movemouse(const Arg *arg)
 	if (c->isfullscreen) /* no support moving fullscreen windows by mouse */
 		return;
 	restack(selmon);
-	ocx = c->x;
-	ocy = c->y;
+	nx = ocx = c->x;
+	ny = ocy = c->y;
 	if (XGrabPointer(dpy, root, False, MOUSEMASK, GrabModeAsync, GrabModeAsync,
 		None, cursor[CurMove]->cursor, CurrentTime) != GrabSuccess)
 		return;
@@ -1557,6 +1562,7 @@ movemouse(const Arg *arg)
 			break;
 		}
 	} while (ev.type != ButtonRelease);
+
 	XUngrabPointer(dpy, CurrentTime);
 	if ((m = recttomon(c->x, c->y, c->w, c->h)) != selmon) {
 		sendmon(c, m);
@@ -1634,6 +1640,7 @@ quit(const Arg *arg)
 	restart = arg->i;
 	running = 0;
 
+
 }
 
 Monitor *
@@ -1675,7 +1682,7 @@ resizeclient(Client *c, int x, int y, int w, int h)
 void
 resizemouse(const Arg *arg)
 {
-	int ocx, ocy, nw, nh;
+	int ocx, ocy, nw, nh, nx, ny;
 	Client *c;
 	Monitor *m;
 	XEvent ev;
@@ -1686,8 +1693,10 @@ resizemouse(const Arg *arg)
 	if (c->isfullscreen) /* no support resizing fullscreen windows by mouse */
 		return;
 	restack(selmon);
-	ocx = c->x;
-	ocy = c->y;
+	nx = ocx = c->x;
+	ny = ocy = c->y;
+	nh = c->h;
+	nw = c->w;
 	if (XGrabPointer(dpy, root, False, MOUSEMASK, GrabModeAsync, GrabModeAsync,
 		None, cursor[CurResize]->cursor, CurrentTime) != GrabSuccess)
 		return;
@@ -1717,11 +1726,12 @@ resizemouse(const Arg *arg)
 				}
 			}
 			if (!selmon->lt[selmon->sellt]->arrange || c->isfloating) {
-				resize(c, c->x, c->y, nw, nh, 1);
+				resize(c, nx, ny, nw, nh, 1);
 			}
 			break;
 		}
 	} while (ev.type != ButtonRelease);
+
 	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, c->w + c->bw - 1, c->h + c->bw - 1);
 	XUngrabPointer(dpy, CurrentTime);
 	while (XCheckMaskEvent(dpy, EnterWindowMask, &ev));
@@ -2099,9 +2109,12 @@ tag(const Arg *arg)
 void
 tagmon(const Arg *arg)
 {
-	if (!selmon->sel || !mons->next)
+	Client *c = selmon->sel;
+	Monitor *dest;
+	if (!c || !mons->next)
 		return;
-	sendmon(selmon->sel, dirtomon(arg->i));
+	dest = dirtomon(arg->i);
+	sendmon(c, dest);
 }
 
 void
@@ -2197,6 +2210,7 @@ unmanage(Client *c, int destroyed)
 		wc.border_width = c->oldbw;
 		XGrabServer(dpy); /* avoid race conditions */
 		XSetErrorHandler(xerrordummy);
+		XSelectInput(dpy, c->win, NoEventMask);
 		XConfigureWindow(dpy, c->win, CWBorderWidth, &wc); /* restore border */
 		XUngrabButton(dpy, AnyButton, AnyModifier, c->win);
 		setclientstate(c, WithdrawnState);
@@ -2620,10 +2634,10 @@ main(int argc, char *argv[])
 	scan();
 	runautostart();
 	run();
-	if (restart)
-		execvp(argv[0], argv);
 	cleanup();
 	XCloseDisplay(dpy);
+	if (restart)
+		execvp(argv[0], argv);
 	return EXIT_SUCCESS;
 }
 

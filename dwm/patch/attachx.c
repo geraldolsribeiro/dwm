@@ -2,8 +2,9 @@ void
 attachx(Client *c)
 {
 	Client *at;
-	unsigned int n;
 
+
+	unsigned int n;
 	for (at = c->mon->clients, n = 0; at; at = at->next)
 		if (!at->isfloating && ISVISIBLEONTAG(at, c->tags))
 			if (++n >= c->mon->nmaster)

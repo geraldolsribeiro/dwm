@@ -11,6 +11,20 @@ rm -rf dwmblocks/
 
 git submodule update --init --recursive
 
+for repo in \
+  flexipatch-finalizer \
+  dwm-flexipatch \
+  dmenu-flexipatch \
+  slock-flexipatch \
+  dwmblocks \
+
+do
+  pushd $repo
+  git checkout master
+  git pull
+  popd
+done
+
 # ainda não sei como aplicar este patch para
 # preservar as tags entre os restarts
 if [ ! -f dwm-preserveonrestart-6.3.diff ]; then
