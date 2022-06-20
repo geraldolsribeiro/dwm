@@ -73,25 +73,18 @@ sed -i "s/^#\(XRENDER\)/\1/" \
 # sed -i "s/^#\(PANGOLIB\)/\1/" \
 #   dwm-flexipatch/config.mk
 
-sed -i "s/\(static const char \*termcmd\[\] *= \).*/\1{ \"xfce4-terminal\", NULL };/" \
+sed -i 's/\(static const char \*termcmd\[\] *= \).*/\1{ "xfce4-terminal", NULL };/' \
   dwm-flexipatch/config.h
 
-
-# sed -i "s/\(static const char \*fonts\[\]\).*/\1 = { \"monospace:size=12\", \"siji:pixelsize=12:antialias=false,autohint=false\" };/" \
-#   dwm-flexipatch/config.h
-
-# sed -i "s/\(static const char \*fonts\[\] *= \).*/\1{ \"JetBrainsMono Nerd Font Mono:style=Regular:size=12\", \"Material Design Icons Desktop:style=Regular:size=10\" };/" \
-#   dwm-flexipatch/config.h
-
-sed -i "s/\(static const char \*fonts\[\] *= \).*/\1{ \"Fira Code:style=Regular:size=12\", \"Material Design Icons Desktop:style=Regular:size=10\" };/" \
+sed -i 's/\(static const char \*fonts\[\] *= \).*/\1{ "Fira Code:style=Regular:size=12", "Material Design Icons Desktop:style=Regular:size=10" };/' \
   dwm-flexipatch/config.h
 
-# sed -i "s/\(static const char dmenufont\[\] *= \).*/\1 \"JetBrainsMono Nerd Font Mono:style=Regular:size=12\";/"\
-#   dwm-flexipatch/config.h
-
-sed -i "s/\(static const char dmenufont\[\] *= \).*/\1 \"Fira Code:style=Regular:size=12\";/"\
+sed -i 's/\(static const char dmenufont\[\] *= \).*/\1 "Fira Code:style=Regular:size=14";/' \
   dwm-flexipatch/config.h
 
+# dmenu grid: 2 columns x 10 lines
+sed -i 's/\("dmenu_run",\)/\1\r"-g", "2",\r"-l", "10",/' \
+  dwm-flexipatch/config.h
 
 
 # https://www.nerdfonts.com/cheat-sheet
@@ -145,6 +138,10 @@ for i in \
  CTRL_V_TO_PASTE_PATCH \
  FUZZYMATCH_PATCH \
  FUZZYHIGHLIGHT_PATCH \
+ EMOJI_HIGHLIGHT_PATCH \
+ PREFIXCOMPLETION_PATCH \
+ GRID_PATCH \
+ GRIDNAV_PATCH \
 
 do
   sed -i "s/^#define $i [01]/#define $i 1/" \

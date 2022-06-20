@@ -1,11 +1,11 @@
 static void
-drawhighlights(struct item *item, int x, int y, int maxw)
+drawhighlights(struct item *item, char *output, int x, int y, int maxw)
 {
 	int i, indent;
 	char *highlight;
 	char c;
 
-	char *itemtext = item->text;
+	char *itemtext = output;
 
 	if (!(strlen(itemtext) && strlen(text)))
 		return;

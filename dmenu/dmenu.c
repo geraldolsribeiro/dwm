@@ -20,6 +20,7 @@
 
 #include "drw.h"
 #include "util.h"
+#include <stdbool.h>
 
 /* macros */
 #define INTERSECT(x,y,w,h,r)  (MAX(0, MIN((x)+(w),(r).x_org+(r).width)  - MAX((x),(r).x_org)) \
@@ -37,6 +38,12 @@ enum {
 	SchemeBorder,
 	SchemeNormHighlight,
 	SchemeSelHighlight,
+	SchemeHover,
+	SchemeGreen,
+	SchemeYellow,
+	SchemeBlue,
+	SchemePurple,
+	SchemeRed,
 	SchemeLast,
 }; /* color schemes */
 
@@ -57,6 +64,8 @@ static struct item *items = NULL;
 static struct item *matches, *matchend;
 static struct item *prev, *curr, *next, *sel;
 static int mon = -1, screen;
+static int commented = 0;
+static int animated = 0;
 
 static Atom clip, utf8;
 static Display *dpy;
@@ -127,7 +136,10 @@ calcoffsets(void)
 	int i, n, rpad = 0;
 
 	if (lines > 0) {
-		n = lines * bh;
+		if (columns)
+			n = lines * columns * bh;
+		else
+			n = lines * bh;
 	} else {
 		n = mw - (promptw + inputw + TEXTW("<") + TEXTW(">") + rpad);
 	}
@@ -173,7 +185,105 @@ drawitem(struct item *item, int x, int y, int w)
 	int r;
 	char *text = item->text;
 
+	int iscomment = 0;
+	if (text[0] == '>') {
+		if (text[1] == '>') {
+			iscomment = 3;
+			switch (text[2]) {
+			case 'r':
+				drw_setscheme(drw, scheme[SchemeRed]);
+				break;
+			case 'g':
+				drw_setscheme(drw, scheme[SchemeGreen]);
+				break;
+			case 'y':
+				drw_setscheme(drw, scheme[SchemeYellow]);
+				break;
+			case 'b':
+				drw_setscheme(drw, scheme[SchemeBlue]);
+				break;
+			case 'p':
+				drw_setscheme(drw, scheme[SchemePurple]);
+				break;
+			case 'h':
+				drw_setscheme(drw, scheme[SchemeNormHighlight]);
+				break;
+			case 's':
+				drw_setscheme(drw, scheme[SchemeSel]);
+				break;
+			default:
+				iscomment = 1;
+				drw_setscheme(drw, scheme[SchemeNorm]);
+			break;
+			}
+		} else {
+			drw_setscheme(drw, scheme[SchemeNorm]);
+			iscomment = 1;
+		}
+	} else if (text[0] == ':') {
+		iscomment = 2;
+		if (item == sel) {
+			switch (text[1]) {
+			case 'r':
+				drw_setscheme(drw, scheme[SchemeRed]);
+				break;
+			case 'g':
+				drw_setscheme(drw, scheme[SchemeGreen]);
+				break;
+			case 'y':
+				drw_setscheme(drw, scheme[SchemeYellow]);
+				break;
+			case 'b':
+				drw_setscheme(drw, scheme[SchemeBlue]);
+				break;
+			case 'p':
+				drw_setscheme(drw, scheme[SchemePurple]);
+				break;
+			case 'h':
+				drw_setscheme(drw, scheme[SchemeNormHighlight]);
+				break;
+			case 's':
+				drw_setscheme(drw, scheme[SchemeSel]);
+				break;
+			default:
+				drw_setscheme(drw, scheme[SchemeSel]);
+				iscomment = 0;
+				break;
+			}
+		} else {
+			drw_setscheme(drw, scheme[SchemeNorm]);
+		}
+	}
 
+	int temppadding = 0;
+	if (iscomment == 2) {
+		if (text[2] == ' ') {
+			temppadding = drw->fonts->h * 3;
+			animated = 1;
+			char dest[1000];
+			strcpy(dest, text);
+			dest[6] = '\0';
+			drw_text(drw, x, y
+				, temppadding
+				, bh
+				, temppadding / 2.6
+				, dest + 3
+				, 0
+			);
+			iscomment = 6;
+			drw_setscheme(drw, sel == item ? scheme[SchemeHover] : scheme[SchemeNorm]);
+		}
+	}
+
+	char *output;
+	if (commented) {
+		static char onestr[2];
+		onestr[0] = text[0];
+		onestr[1] = '\0';
+		output = onestr;
+	} else {
+		output = text;
+	}
 
 	if (item == sel)
 		drw_setscheme(drw, scheme[SchemeSel]);
@@ -183,15 +293,15 @@ drawitem(struct item *item, int x, int y, int w)
 		drw_setscheme(drw, scheme[SchemeNorm]);
 
 	r = drw_text(drw
-		, x
+		, x + ((iscomment == 6) ? temppadding : 0)
 		, y
 		, w
 		, bh
-		, lrpad / 2
-		, text
+		, commented ? (bh - TEXTW(output) - lrpad) / 2 : lrpad / 2
+		, output + iscomment
 		, 0
 		);
-	drawhighlights(item, x, y, w);
+	drawhighlights(item, output + iscomment, x + ((iscomment == 6) ? temppadding : 0), y, w);
 	return r;
 }
 
@@ -224,9 +334,18 @@ drawmenu(void)
 	}
 
 	if (lines > 0) {
-		/* draw vertical list */
-		for (item = curr; item != next; item = item->right)
-			drawitem(item, x, y += bh, mw - x);
+		/* draw grid */
+		int i = 0;
+		for (item = curr; item != next; item = item->right, i++)
+			if (columns)
+				drawitem(
+					item,
+					x + ((i / lines) *  ((mw - x) / columns)),
+					y + (((i % lines) + 1) * bh),
+					(mw - x) / columns
+				);
+			else
+				drawitem(item, x, y += bh, mw - x);
 	} else if (matches) {
 		/* draw horizontal list */
 		x += inputw;
@@ -312,8 +431,13 @@ match(void)
 			die("cannot realloc %zu bytes:", tokn * sizeof *tokv);
 	len = tokc ? strlen(tokv[0]) : 0;
 
-	matches = lprefix = lsubstr = matchend = prefixend = substrend = NULL;
-	textsize = strlen(text) + 1;
+	if (use_prefix) {
+		matches = lprefix = matchend = prefixend = NULL;
+		textsize = strlen(text);
+	} else {
+		matches = lprefix = lsubstr = matchend = prefixend = substrend = NULL;
+		textsize = strlen(text) + 1;
+	}
 	for (item = items; item && item->text; item++)
 	{
 		for (i = 0; i < tokc; i++)
@@ -326,7 +450,7 @@ match(void)
 			appenditem(item, &matches, &matchend);
 		else if (!fstrncmp(tokv[0], item->text, len))
 			appenditem(item, &lprefix, &prefixend);
-		else
+		else if (!use_prefix)
 			appenditem(item, &lsubstr, &substrend);
 	}
 	if (lprefix) {
@@ -337,7 +461,7 @@ match(void)
 			matches = lprefix;
 		matchend = prefixend;
 	}
-	if (lsubstr)
+	if (!use_prefix && lsubstr)
 	{
 		if (matches) {
 			matchend->right = lsubstr;
@@ -400,8 +524,12 @@ keypress(XKeyEvent *ev)
 {
 	char buf[32];
 	int len;
+	struct item * item;
 	KeySym ksym;
 	Status status;
+	int i;
+	struct item *tmpsel;
+	bool offscreen = false;
 
 	len = XmbLookupString(xic, ev, buf, sizeof buf, &ksym, &status);
 	switch (status) {
@@ -536,6 +664,24 @@ insert:
 		break;
 	case XK_Left:
 	case XK_KP_Left:
+		if (columns > 1) {
+			if (!sel)
+				return;
+			tmpsel = sel;
+			for (i = 0; i < lines; i++) {
+				if (!tmpsel->left ||  tmpsel->left->right != tmpsel)
+					return;
+				if (tmpsel == curr)
+					offscreen = true;
+				tmpsel = tmpsel->left;
+			}
+			sel = tmpsel;
+			if (offscreen) {
+				curr = prev;
+				calcoffsets();
+			}
+			break;
+		}
 		if (cursor > 0 && (!sel || !sel->left || lines > 0)) {
 			cursor = nextrune(-1);
 			break;
@@ -576,6 +722,24 @@ insert:
 		break;
 	case XK_Right:
 	case XK_KP_Right:
+		if (columns > 1) {
+			if (!sel)
+				return;
+			tmpsel = sel;
+			for (i = 0; i < lines; i++) {
+				if (!tmpsel->right ||  tmpsel->right->left != tmpsel)
+					return;
+				tmpsel = tmpsel->right;
+				if (tmpsel == next)
+					offscreen = true;
+			}
+			sel = tmpsel;
+			if (offscreen) {
+				curr = next;
+				calcoffsets();
+			}
+			break;
+		}
 		if (text[cursor] != '\0') {
 			cursor = nextrune(+1);
 			break;
@@ -591,12 +755,22 @@ insert:
 		}
 		break;
 	case XK_Tab:
-		if (!sel)
-			return;
-		strncpy(text, sel->text, sizeof text - 1);
+		if (!matches)
+			break; /* cannot complete no matches */
+		/* only do tab completion if all matches start with prefix */
+		for (item = matches; item && item->text; item = item->right)
+			if (item->text[0] != text[0])
+				goto draw;
+		strncpy(text, matches->text, sizeof text - 1);
 		text[sizeof text - 1] = '\0';
-		cursor = strlen(text);
-		match();
+		len = cursor = strlen(text); /* length of longest common prefix */
+		for (item = matches; item && item->text; item = item->right) {
+			cursor = 0;
+			while (cursor < len && text[cursor] == item->text[cursor])
+				cursor++;
+			len = cursor;
+		}
+		memset(text + len, '\0', strlen(text) - len);
 		break;
 	}
 
@@ -853,8 +1027,10 @@ usage(void)
 		"c"
 		"f"
 		"s"
+		"x"
 		"F"
 		"] "
+		"[-g columns] "
 		"[-l lines] [-p prompt] [-fn font] [-m monitor]"
 		"\n             [-nb color] [-nf color] [-sb color] [-sf color] [-w windowid]"
 		"\n            "
@@ -887,11 +1063,18 @@ main(int argc, char *argv[])
 		} else if (!strcmp(argv[i], "-s")) { /* case-sensitive item matching */
 			fstrncmp = strncmp;
 			fstrstr = strstr;
+		} else if (!strcmp(argv[i], "-x")) { /* invert use_prefix */
+			use_prefix = !use_prefix;
 		} else if (!strcmp(argv[i], "-F")) { /* disable/enable fuzzy matching, depends on default */
 			fuzzy = !fuzzy;
 		} else if (i + 1 == argc)
 			usage();
 		/* these options take one argument */
+		else if (!strcmp(argv[i], "-g")) {   /* number of columns in grid */
+			columns = atoi(argv[++i]);
+			if (columns && lines == 0)
+				lines = 1;
+		}
 		else if (!strcmp(argv[i], "-l"))   /* number of lines in vertical list */
 			lines = atoi(argv[++i]);
 		else if (!strcmp(argv[i], "-m"))

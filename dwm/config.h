@@ -27,7 +27,7 @@ static int tagindicatortype              = INDICATOR_TOP_LEFT_SQUARE;
 static int tiledindicatortype            = INDICATOR_NONE;
 static int floatindicatortype            = INDICATOR_TOP_LEFT_SQUARE;
 static const char *fonts[]               = { "Fira Code:style=Regular:size=12", "Material Design Icons Desktop:style=Regular:size=10" };
-static const char dmenufont[]            =  "Fira Code:style=Regular:size=12";
+static const char dmenufont[]            =  "Fira Code:style=Regular:size=14";
 
 static char c000000[]                    = "#000000"; // placeholder value
 
@@ -231,7 +231,7 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = {
-	"dmenu_run",
+	"dmenu_run","-g", "2","-l", "10",
 	"-m", dmenumon,
 	"-fn", dmenufont,
 	"-nb", normbgcolor,
@@ -242,12 +242,20 @@ static const char *dmenucmd[] = {
 };
 static const char *termcmd[]  = { "xfce4-terminal", NULL };
 
+// https://gist.github.com/palopezv/efd34059af6126ad970940bcc6a90f2e
+static const char *upvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "+5%",     NULL };
+static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "-5%",     NULL };
+static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "toggle",  NULL };
+
 /* This defines the name of the executable that handles the bar (used for signalling purposes) */
 #define STATUSBAR "dwmblocks"
 
 
 static Key keys[] = {
 	/* modifier                     key            function                argument */
+	{ 0,                            XF86XK_AudioLowerVolume, spawn,        {.v = downvol } },
+	{ 0,                            XF86XK_AudioMute, spawn,               {.v = mutevol } },
+	{ 0,                            XF86XK_AudioRaiseVolume, spawn,        {.v = upvol   } },
 	{ MODKEY,                       XK_p,          spawn,                  {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return,     spawn,                  {.v = termcmd } },
 	{ MODKEY,                       XK_b,          togglebar,              {0} },

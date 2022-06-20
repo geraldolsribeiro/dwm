@@ -22,6 +22,12 @@ static const unsigned int alphas[][3]      = {
 	[SchemeBorder] = { OPAQUE, OPAQUE, OPAQUE },
 	[SchemeSelHighlight] = { OPAQUE, baralpha, borderalpha },
 	[SchemeNormHighlight] = { OPAQUE, baralpha, borderalpha },
+	[SchemeHover] = { OPAQUE, baralpha, borderalpha },
+	[SchemeGreen] = { OPAQUE, baralpha, borderalpha },
+	[SchemeRed] = { OPAQUE, baralpha, borderalpha },
+	[SchemeYellow] = { OPAQUE, baralpha, borderalpha },
+	[SchemeBlue] = { OPAQUE, baralpha, borderalpha },
+	[SchemePurple] = { OPAQUE, baralpha, borderalpha },
 };
 
 static
@@ -34,9 +40,17 @@ char *colors[][2] = {
 	[SchemeBorder] = { "#000000", "#005577" },
 	[SchemeSelHighlight]  = { "#ffc978", "#005577" },
 	[SchemeNormHighlight] = { "#ffc978", "#222222" },
+	[SchemeHover]  = { "#ffffff", "#353D4B" },
+	[SchemeGreen]  = { "#ffffff", "#52E067" },
+	[SchemeRed]    = { "#ffffff", "#e05252" },
+	[SchemeYellow] = { "#ffffff", "#e0c452" },
+	[SchemeBlue]   = { "#ffffff", "#5280e0" },
+	[SchemePurple] = { "#ffffff", "#9952e0" },
 };
 /* -l option; if nonzero, dmenu uses vertical list with given number of lines */
 static unsigned int lines      = 0;
+/* -g option; if nonzero, dmenu uses a grid comprised of columns and lines */
+static unsigned int columns    = 0;
 
 /*
  * Characters not considered part of a word while deleting words
@@ -47,3 +61,7 @@ static const char worddelimiters[] = " ";
 /* Size of the window border */
 static unsigned int border_width = 0;
 
+/*
+ * Use prefix matching by default; can be inverted with the -x flag.
+ */
+static int use_prefix = 1;

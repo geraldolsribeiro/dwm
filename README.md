@@ -1,5 +1,3 @@
 # Dynamic Window Manager
 
-My configuration.
-
-
+Run `./install.sh` to apply the patches and change the settings.
