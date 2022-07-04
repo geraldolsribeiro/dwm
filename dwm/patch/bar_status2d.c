@@ -1,9 +1,29 @@
+static char termcol0[]  = "#000000"; /* black   */
+static char termcol1[]  = "#ff0000"; /* red     */
+static char termcol2[]  = "#33ff00"; /* green   */
+static char termcol3[]  = "#ff0099"; /* yellow  */
+static char termcol4[]  = "#0066ff"; /* blue    */
+static char termcol5[]  = "#cc00ff"; /* magenta */
+static char termcol6[]  = "#00ffff"; /* cyan    */
+static char termcol7[]  = "#d0d0d0"; /* white   */
+static char termcol8[]  = "#808080"; /* black   */
+static char termcol9[]  = "#ff0000"; /* red     */
+static char termcol10[] = "#33ff00"; /* green   */
+static char termcol11[] = "#ff0099"; /* yellow  */
+static char termcol12[] = "#0066ff"; /* blue    */
+static char termcol13[] = "#cc00ff"; /* magenta */
+static char termcol14[] = "#00ffff"; /* cyan    */
+static char termcol15[] = "#ffffff"; /* white   */
+static char *termcolor[] = {
+	termcol0, termcol1, termcol2, termcol3, termcol4, termcol5, termcol6, termcol7,
+	termcol8, termcol9, termcol10, termcol11, termcol12, termcol13, termcol14, termcol15,
+};
 
 int
 width_status2d(Bar *bar, BarArg *a)
 {
 	int width;
-	width = status2dtextlength(rawstext);
+	width = status2dtextlength(stext);
 	return width ? width + lrpad : 0;
 }
 
@@ -11,10 +31,15 @@ width_status2d(Bar *bar, BarArg *a)
 int
 draw_status2d(Bar *bar, BarArg *a)
 {
-	return drawstatusbar(a, rawstext);
+	return drawstatusbar(a, stext);
 }
 
 
+int
+click_status2d(Bar *bar, Arg *arg, BarArg *a)
+{
+	return ClkStatusText;
+}
 
 int
 drawstatusbar(BarArg *a, char* stext)
@@ -30,7 +55,7 @@ drawstatusbar(BarArg *a, char* stext)
 	if (!(text = (char*) malloc(sizeof(char)*(len + 1))))
 		die("malloc");
 	p = text;
-	copyvalidchars(text, stext);
+	memcpy(text, stext, len);
 
 	x += lrpad / 2;
 	drw_setscheme(drw, scheme[LENGTH(colors)]);
@@ -73,6 +98,12 @@ drawstatusbar(BarArg *a, char* stext)
 					buf[7] = '\0';
 					drw_clr_create(drw, &drw->scheme[ColBg], buf, alphas[SchemeNorm][ColBg]);
 					i += 7;
+				} else if (text[i] == 'C') {
+					int c = atoi(text + ++i) % 16;
+					drw_clr_create(drw, &drw->scheme[ColFg], termcolor[c], alphas[SchemeNorm][ColBg]);
+				} else if (text[i] == 'B') {
+					int c = atoi(text + ++i) % 16;
+					drw_clr_create(drw, &drw->scheme[ColBg], termcolor[c], alphas[SchemeNorm][ColBg]);
 				} else if (text[i] == 'd') {
 					drw->scheme[ColFg] = scheme[SchemeNorm][ColFg];
 					drw->scheme[ColBg] = scheme[SchemeNorm][ColBg];
@@ -138,7 +169,7 @@ status2dtextlength(char* stext)
 	if (!(text = (char*) malloc(sizeof(char)*len)))
 		die("malloc");
 	p = text;
-	copyvalidchars(text, stext);
+	memcpy(text, stext, len);
 
 	/* compute width of the status text */
 	w = 0;

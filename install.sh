@@ -1,7 +1,10 @@
-#!/bin/bash
+#!/bin/bash -ex
 
 # https://gist.github.com/palopezv/efd34059af6126ad970940bcc6a90f2e
 # palopezv/dwm_config_pulseaudio.h
+
+# fc-list | grep "Fira"
+readonly FIRACODE="FiraCode Nerd Font Mono:style=Regular"
 
 rm -rf flexipatch-finalizer/
 rm -rf dwm-flexipatch/
@@ -42,35 +45,41 @@ chmod 755 flexipatch-finalizer/flexipatch-finalizer.sh
 # ----------------------------------------------------------------------
 # DWM
 # ----------------------------------------------------------------------
-cp dwm-flexipatch/config{.def,}.h
-cp dwm-flexipatch/patches{.def,}.h
-for i in \
+
+echo \
 BAR_DWMBLOCKS_PATCH \
 BAR_DWMBLOCKS_SIGUSR1_PATCH \
 BAR_LTSYMBOL_PATCH \
-BAR_STATUS_PATCH \
-BAR_STATUSBUTTON_PATCH \
-BAR_STATUSCMD_PATCH \
-BAR_STATUS2D_PATCH \
-BAR_SYSTRAY_PATCH \
-BAR_TAGS_PATCH \
-BAR_WINTITLE_PATCH \
-BAR_TITLE_LEFT_PAD_PATCH \
-BAR_ALPHA_PATCH \
 BAR_STATUSALLMONS_PATCH \
+BAR_STATUSCMD_PATCH \
 BAR_STATUSCOLORS_PATCH \
 BAR_STATUSPADDING_PATCH \
+BAR_STATUS_PATCH \
+BAR_TAGS_PATCH \
+BAR_TITLE_LEFT_PAD_PATCH \
+BAR_WINTITLE_PATCH \
+> /dev/null
+
+cp dwm-flexipatch/config{.def,}.h
+cp dwm-flexipatch/patches{.def,}.h
+for i in \
 ATTACHASIDE_PATCH \
 AUTOSTART_PATCH \
+BAR_ALPHA_PATCH \
+BAR_STATUS2D_PATCH \
+BAR_STATUS2D_XRDB_TERMCOLORS_PATCH \
+BAR_STATUSBUTTON_PATCH \
+BAR_SYSTRAY_PATCH \
 CYCLELAYOUTS_PATCH \
+GRIDMODE_LAYOUT \
+MONOCLE_LAYOUT \
+BAR_POWERLINE_STATUS_PATCH \
 RESTARTSIG_PATCH \
 ROTATESTACK_PATCH \
 SELFRESTART_PATCH \
 TAGOTHERMONITOR_PATCH \
-VANITYGAPS_PATCH \
-GRIDMODE_LAYOUT \
 TILE_LAYOUT \
-MONOCLE_LAYOUT \
+VANITYGAPS_PATCH \
 
 do
   sed -i "s/^#define $i [01]/#define $i 1/" \
@@ -89,10 +98,10 @@ sed -i "s/^#\(XRENDER\)/\1/" \
 sed -i 's/\(static const char \*termcmd\[\] *= \).*/\1{ "xfce4-terminal", NULL };/' \
   dwm-flexipatch/config.h
 
-sed -i 's/\(static const char \*fonts\[\] *= \).*/\1{ "Fira Code:style=Regular:size=12", "Material Design Icons Desktop:style=Regular:size=10" };/' \
+sed -i "s/\(static const char \*fonts\[\] *= \).*/\1{ \"$FIRACODE:size=12\", \"Material Design Icons Desktop:style=Regular:size=10\" };/" \
   dwm-flexipatch/config.h
 
-sed -i 's/\(static const char dmenufont\[\] *= \).*/\1 "Fira Code:style=Regular:size=14";/' \
+sed -i "s/\(static const char dmenufont\[\] *= \).*/\1 \"$FIRACODE:size=14\";/" \
   dwm-flexipatch/config.h
 
 # dmenu grid: 2 columns x 10 lines
@@ -112,7 +121,7 @@ sed -i "s/\(static const unsigned int gappov\).*/\1 = 10;/" \
   -r -d ~/git/github/dwm/dwm-flexipatch/ \
   -o ~/git/github/dwm/dwm
 
-git -C dwm apply ../volume-key.patch
+# git -C dwm apply ../volume-key.patch
 
 cp dwm.desktop dwm/
 
@@ -199,14 +208,14 @@ sed -i "s/^#\(XINERAMAFLAGS = -DXINERAMA\)/\1/" \
 # DWMBLOCKS
 # ----------------------------------------------------------------------
 cp blocks.h dwmblocks/
-
-# sed -i "s|\(#define PATH(name) \).*|\1 \"/home/geraldo/bin/\" name|" \
-#   dwmblocks/config.h
+# Quando uso cores (https://dwm.suckless.org/patches/status2d/) a string final
+# pode ficar com mais de 50 caracteres e será cortada. Ampliando para 80
+sed -i "s/\(#define CMDLENGTH\).*/\1 80/" dwmblocks/dwmblocks.c
 
 # ----------------------------------------------------------------------
 # ST
 # ----------------------------------------------------------------------
-suto apt install -y libharfbuzz-dev
+sudo apt install -y libharfbuzz-dev
 cp st-flexipatch/patches{.def,}.h
 cp st-flexipatch/config{.def,}.h
 for i in \
@@ -226,7 +235,7 @@ do
     st-flexipatch/patches.h
 done
 
-sed -i 's/\(static char \*font *= \).*/\1 "Fira Code:style=Regular:size=14";/' \
+sed -i "s/\(static char \*font *= \).*/\1 \"$FIRACODE:size=14\";/" \
   st-flexipatch/config.h
 
 sed -i "s/^#LIGATURES_/LIGATURES_/" st-flexipatch/config.mk
@@ -255,3 +264,12 @@ make -C st clean all
 sudo make -C st install
 
 sudo make -C scripts/ install
+
+
+if [ ! -f getnf ]; then
+  wget https://raw.githubusercontent.com/ronniedroid/getnf/master/getnf
+fi
+
+chmod 755 getnf
+# shellcheck disable=SC2016
+sed -i 's/^distDir=.*/distDir="$HOME\/.fonts\/NerdFonts"/' getnf

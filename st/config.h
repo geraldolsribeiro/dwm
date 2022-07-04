@@ -5,7 +5,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font =  "Fira Code:style=Regular:size=14";
+static char *font =  "FiraCode Nerd Font Mono:style=Regular:size=14";
 
 
 static int borderpx = 2;
