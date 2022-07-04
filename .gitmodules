@@ -13,3 +13,6 @@
 [submodule "dwmblocks"]
 	path = dwmblocks
 	url = https://github.com/torrinfail/dwmblocks.git
+[submodule "st-flexipatch"]
+	path = st-flexipatch
+	url = git@github.com:bakkeby/st-flexipatch.git

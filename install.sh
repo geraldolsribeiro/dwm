@@ -7,22 +7,24 @@ rm -rf flexipatch-finalizer/
 rm -rf dwm-flexipatch/
 rm -rf dmenu-flexipatch/
 rm -rf slock-flexipatch/
+rm -rf st-flexipatch/
 rm -rf dwmblocks/
 
 git submodule update --init --recursive
 
 for repo in \
-  flexipatch-finalizer \
-  dwm-flexipatch \
   dmenu-flexipatch \
-  slock-flexipatch \
   dwmblocks \
+  dwm-flexipatch \
+  flexipatch-finalizer \
+  slock-flexipatch \
+  st-flexipatch \
 
 do
-  pushd $repo
+  pushd $repo || exit 1
   git checkout master
   git pull
-  popd
+  popd || exit 1
 done
 
 # ainda não sei como aplicar este patch para
@@ -34,17 +36,14 @@ fi
 chmod 755 flexipatch-finalizer/flexipatch-finalizer.sh
 
 # Copy default headers
-cp dwm-flexipatch/config{.def,}.h
-cp dwm-flexipatch/patches{.def,}.h
-cp dmenu-flexipatch/config{.def,}.h
-cp dmenu-flexipatch/patches{.def,}.h
-cp slock-flexipatch/patches{.def,}.h
-cp slock-flexipatch/config{.def,}.h
+
 #cp dwmblocks/config{.def,}.h
 
-# -------
-
-# Enable some patches
+# ----------------------------------------------------------------------
+# DWM
+# ----------------------------------------------------------------------
+cp dwm-flexipatch/config{.def,}.h
+cp dwm-flexipatch/patches{.def,}.h
 for i in \
 BAR_DWMBLOCKS_PATCH \
 BAR_DWMBLOCKS_SIGUSR1_PATCH \
@@ -141,8 +140,11 @@ post_install:
 EOF
 
 
-# -------
-
+# ----------------------------------------------------------------------
+# DMENU
+# ----------------------------------------------------------------------
+cp dmenu-flexipatch/config{.def,}.h
+cp dmenu-flexipatch/patches{.def,}.h
 for i in \
  ALPHA_PATCH \
  BORDER_PATCH \
@@ -166,8 +168,11 @@ done
   -r -d ~/git/github/dwm/dmenu-flexipatch/ \
   -o ~/git/github/dwm/dmenu
 
-# -------
-
+# ----------------------------------------------------------------------
+# SLOCK
+# ----------------------------------------------------------------------
+cp slock-flexipatch/patches{.def,}.h
+cp slock-flexipatch/config{.def,}.h
 for i in \
  ALPHA_PATCH \
  AUTO_TIMEOUT_PATCH \
@@ -190,14 +195,49 @@ sed -i "s/^#\(XINERAMAFLAGS = -DXINERAMA\)/\1/" \
   -r -d ~/git/github/dwm/slock-flexipatch/ \
   -o ~/git/github/dwm/slock
 
-# -------
-
+# ----------------------------------------------------------------------
+# DWMBLOCKS
+# ----------------------------------------------------------------------
 cp blocks.h dwmblocks/
 
 # sed -i "s|\(#define PATH(name) \).*|\1 \"/home/geraldo/bin/\" name|" \
 #   dwmblocks/config.h
 
-# -------
+# ----------------------------------------------------------------------
+# ST
+# ----------------------------------------------------------------------
+suto apt install -y libharfbuzz-dev
+cp st-flexipatch/patches{.def,}.h
+cp st-flexipatch/config{.def,}.h
+for i in \
+ ALPHA_PATCH \
+ ALPHA_FOCUS_HIGHLIGHT_PATCH \
+ BLINKING_CURSOR_PATCH \
+ CLIPBOARD_PATCH \
+ COPYURL_PATCH \
+ LIGATURES_PATCH \
+ VIM_BROWSE_PATCH \
+ NETWMICON_PATCH \
+ NEWTERM_PATCH \
+ RIGHTCLICKTOPLUMB_PATCH \
+
+do
+  sed -i "s/^#define $i [01]/#define $i 1/" \
+    st-flexipatch/patches.h
+done
+
+sed -i 's/\(static char \*font *= \).*/\1 "Fira Code:style=Regular:size=14";/' \
+  st-flexipatch/config.h
+
+sed -i "s/^#LIGATURES_/LIGATURES_/" st-flexipatch/config.mk
+
+./flexipatch-finalizer/flexipatch-finalizer.sh \
+  -r -d ~/git/github/dwm/st-flexipatch/ \
+  -o ~/git/github/dwm/st
+
+# ----------------------------------------------------------------------
+# BUILD ALL
+# ----------------------------------------------------------------------
 
 make -C dwm clean all
 sudo make -C dwm install post_install
@@ -208,6 +248,10 @@ sudo make -C dmenu install
 make -C slock clean all
 sudo make -C slock install
 
-make -C dwmblocks/ clean all
+make -C dwmblocks clean all
 sudo make -C dwmblocks install
 
+make -C st clean all
+sudo make -C st install
+
+sudo make -C scripts/ install

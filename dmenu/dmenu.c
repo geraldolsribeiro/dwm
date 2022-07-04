@@ -899,13 +899,12 @@ static void
 setup(void)
 {
 	int x, y, i, j;
-	unsigned int du, tmp;
+	unsigned int du;
 	XSetWindowAttributes swa;
 	XIM xim;
 	Window w, dw, *dws;
 	XWindowAttributes wa;
 	XClassHint ch = {"dmenu", "dmenu"};
-	struct item *item;
 #ifdef XINERAMA
 	XineramaScreenInfo *info;
 	Window pw;
@@ -975,12 +974,7 @@ setup(void)
 			mw = wa.width;
 		}
 	}
-	for (item = items; item && item->text; ++item) {
-		if ((tmp = textw_clamp(item->text, mw/3)) > inputw) {
-			if ((inputw = tmp) == mw/3)
-				break;
-		}
-	}
+	inputw = mw / 3; /* input width: ~33.33% of monitor width */
 	match();
 
 	/* create menu window */
@@ -989,7 +983,9 @@ setup(void)
 	swa.colormap = cmap;
 	swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask
 	;
-	win = XCreateWindow(dpy, parentwin, x, y - (topbar ? 0 : border_width * 2), mw - border_width * 2, mh, border_width,
+	win = XCreateWindow(
+		dpy, parentwin,
+		x, y - (topbar ? 0 : border_width * 2), mw - border_width * 2, mh, border_width,
 		depth, InputOutput, visual,
 		CWOverrideRedirect|CWBackPixel|CWBorderPixel|CWColormap|CWEventMask, &swa
 	);
@@ -1127,6 +1123,7 @@ main(int argc, char *argv[])
 		die("no fonts could be loaded.");
 
 	lrpad = drw->fonts->h;
+
 
 
 #ifdef __OpenBSD__
