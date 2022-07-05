@@ -122,7 +122,8 @@ sed -i "s/\(static const unsigned int gappov\).*/\1 = 10;/" \
   -r -d ~/git/github/dwm/dwm-flexipatch/ \
   -o ~/git/github/dwm/dwm
 
-# git -C dwm apply ../volume-key.patch
+# Habilita as teclas de volume
+git -C dwm apply ../volume-key.patch
 
 cp dwm.desktop dwm/
 
