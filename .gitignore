@@ -4,3 +4,4 @@ dmenu/stest
 dwm/dwm
 *.o
 slock/slock
+st/st

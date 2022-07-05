@@ -1,6 +1,7 @@
 /* Bar functionality */
 #include "bar_indicators.h"
 #include "bar_tagicons.h"
+#include "bar.h"
 
 #include "bar_alpha.h"
 #include "bar_ltsymbol.h"
@@ -19,6 +20,7 @@
 #include "restartsig.h"
 #include "rotatestack.h"
 #include "selfrestart.h"
+#include "sticky.h"
 #include "tagothermonitor.h"
 #include "vanitygaps.h"
 /* Layouts */

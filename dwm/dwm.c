@@ -59,7 +59,7 @@
 #define CLEANMASK(mask)         (mask & ~(numlockmask|LockMask) & (ShiftMask|ControlMask|Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask))
 #define INTERSECT(x,y,w,h,m)    (MAX(0, MIN((x)+(w),(m)->wx+(m)->ww) - MAX((x),(m)->wx)) \
                                * MAX(0, MIN((y)+(h),(m)->wy+(m)->wh) - MAX((y),(m)->wy)))
-#define ISVISIBLEONTAG(C, T)    ((C->tags & T))
+#define ISVISIBLEONTAG(C, T)    ((C->tags & T) || C->issticky)
 #define ISVISIBLE(C)            ISVISIBLEONTAG(C, C->mon->tagset[C->mon->seltags])
 #define LENGTH(X)               (sizeof X / sizeof X[0])
 #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
@@ -173,6 +173,7 @@ typedef struct {
 	int (*widthfunc)(Bar *bar, BarArg *a);
 	int (*drawfunc)(Bar *bar, BarArg *a);
 	int (*clickfunc)(Bar *bar, Arg *arg, BarArg *a);
+	int (*hoverfunc)(Bar *bar, BarArg *a, XMotionEvent *ev);
 	char *name; // for debugging
 	int x, w; // position, width for internal use
 } BarRule;
@@ -196,6 +197,7 @@ struct Client {
 	int bw, oldbw;
 	unsigned int tags;
 	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen;
+	int issticky;
 	Client *next;
 	Client *snext;
 	Monitor *mon;
@@ -1492,7 +1494,14 @@ motionnotify(XEvent *e)
 {
 	static Monitor *mon = NULL;
 	Monitor *m;
+	Bar *bar;
 	XMotionEvent *ev = &e->xmotion;
+
+	if ((bar = wintobar(ev->window))) {
+		barhover(e, bar);
+		return;
+	}
+
 
 	if (ev->window != root)
 		return;

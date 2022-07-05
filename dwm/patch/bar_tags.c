@@ -58,3 +58,9 @@ click_tags(Bar *bar, Arg *arg, BarArg *a)
 	return ClkTagBar;
 }
 
+int
+hover_tags(Bar *bar, BarArg *a, XMotionEvent *ev)
+{
+
+	return 1;
+}
