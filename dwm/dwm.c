@@ -635,11 +635,12 @@ checkotherwm(void)
 void
 cleanup(void)
 {
-	Arg a = {.ui = ~0};
-	Layout foo = { "", NULL };
 	Monitor *m;
+	Layout foo = { "", NULL };
 	size_t i;
-	view(&a);
+
+
+
 	selmon->lt[selmon->sellt] = &foo;
 	for (m = mons; m; m = m->next)
 		while (m->stack)
@@ -1646,8 +1647,6 @@ quit(const Arg *arg)
 {
 	restart = arg->i;
 	running = 0;
-
-
 }
 
 Monitor *

@@ -5,6 +5,7 @@ static const Block blocks[] = {
     { "", "~/bin/sb_memory",  30, 0 },
     { "", "~/bin/sb_date",  5, 0 },
     { "", "~/bin/sb_volume",  5, 0 },
+    { "", "~/bin/sb_battery",  5, 0 },
 };
 
 // sets delimeter between status commands. NULL character ('\0') means no delimeter.
