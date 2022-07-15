@@ -3,6 +3,7 @@ static const Block blocks[] = {
     /*Icon*/ /*Command*/ /*Update Interval*/ /*Update Signal*/
     { "", "~/bin/sb_disk", 30, 0 },
     { "", "~/bin/sb_memory",  30, 0 },
+    { "", "~/bin/sb_loadavg",  30, 0 },
     { "", "~/bin/sb_date",  5, 0 },
     { "", "~/bin/sb_volume",  5, 0 },
     { "", "~/bin/sb_battery",  5, 0 },
