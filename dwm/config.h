@@ -254,15 +254,15 @@ static const char *dmenucmd[] = {
 static const char *termcmd[]  = { "xfce4-terminal", NULL };
 
 // https://gist.github.com/palopezv/efd34059af6126ad970940bcc6a90f2e
-static const char *upvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "+5%",     NULL };
+static const char *upvol[]   = { "/usr/bin/pactl", "set-sink-volume", "0", "+5%",     NULL };
 static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "-5%",     NULL };
 static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "toggle",  NULL };
 
 static Key keys[] = {
 	/* modifier                     key            function                argument */
-	{ 0,                            XF86XK_AudioLowerVolume, spawn,        {.v = downvol } },
-	{ 0,                            XF86XK_AudioMute, spawn,               {.v = mutevol } },
-	{ 0,                            XF86XK_AudioRaiseVolume, spawn,        {.v = upvol   } },
+	{ 0,                            XF86XK_AudioLowerVolume,  spawn,       {.v = downvol } },
+	{ 0,                            XF86XK_AudioMute,         spawn,       {.v = mutevol } },
+	{ 0,                            XF86XK_AudioRaiseVolume,  spawn,       {.v = upvol   } },
 	{ MODKEY,                       XK_p,          spawn,                  {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return,     spawn,                  {.v = termcmd } },
 	{ MODKEY,                       XK_b,          togglebar,              {0} },

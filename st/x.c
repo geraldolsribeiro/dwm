@@ -2065,7 +2065,6 @@ run(void)
 			}
 		}
 
-
 		draw();
 		XFlush(xw.dpy);
 		drawing = 0;
