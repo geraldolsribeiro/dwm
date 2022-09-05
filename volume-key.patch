@@ -1,11 +1,5 @@
-diff --git a/dwm-flexipatch b/dwm-flexipatch
---- a/dwm-flexipatch
-+++ b/dwm-flexipatch
-@@ -1 +1 @@
--Subproject commit 5f7df0b0dc78ae00f21d5bbe892456c450506b9b
-+Subproject commit 5f7df0b0dc78ae00f21d5bbe892456c450506b9b-dirty
 diff --git a/dwm/config.h b/dwm/config.h
-index 9b6501f..4c94ebe 100644
+index af451a6..971fe1a 100644
 --- a/dwm/config.h
 +++ b/dwm/config.h
 @@ -253,10 +253,16 @@ static const char *dmenucmd[] = {
@@ -18,7 +12,7 @@ index 9b6501f..4c94ebe 100644
 +static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "-5%",     NULL };
 +static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "toggle",  NULL };
  
- static Key keys[] = {
+ static const Key keys[] = {
  	/* modifier                     key            function                argument */
 +	{ 0,                            XF86XK_AudioLowerVolume,  spawn,       {.v = downvol } },
 +	{ 0,                            XF86XK_AudioMute,         spawn,       {.v = mutevol } },
@@ -27,7 +21,7 @@ index 9b6501f..4c94ebe 100644
  	{ MODKEY|ShiftMask,             XK_Return,     spawn,                  {.v = termcmd } },
  	{ MODKEY,                       XK_b,          togglebar,              {0} },
 diff --git a/dwm/dwm.c b/dwm/dwm.c
-index a937350..b1149c8 100644
+index 3df66c0..84282ea 100644
 --- a/dwm/dwm.c
 +++ b/dwm/dwm.c
 @@ -40,6 +40,7 @@
@@ -38,76 +32,3 @@ index a937350..b1149c8 100644
  
  #include "drw.h"
  #include "util.h"
-diff --git a/dwmblocks b/dwmblocks
---- a/dwmblocks
-+++ b/dwmblocks
-@@ -1 +1 @@
--Subproject commit a933ce0d6109524b393feb3e7156cbf0de88b42c
-+Subproject commit a933ce0d6109524b393feb3e7156cbf0de88b42c-dirty
-diff --git a/slock-flexipatch b/slock-flexipatch
---- a/slock-flexipatch
-+++ b/slock-flexipatch
-@@ -1 +1 @@
--Subproject commit 3131706fc5f202759cbf81c661df14578d721fb8
-+Subproject commit 3131706fc5f202759cbf81c661df14578d721fb8-dirty
-diff --git a/st-flexipatch b/st-flexipatch
---- a/st-flexipatch
-+++ b/st-flexipatch
-@@ -1 +1 @@
--Subproject commit ac9f5419653ea017eead9ad9ffb4770f4939cde9
-+Subproject commit ac9f5419653ea017eead9ad9ffb4770f4939cde9-dirty
-diff --git a/volume-key.patch b/volume-key.patch
-index 95a9316..e69de29 100644
---- a/volume-key.patch
-+++ b/volume-key.patch
-@@ -1,50 +0,0 @@
--diff --git a/dwm-flexipatch b/dwm-flexipatch
----- a/dwm-flexipatch
--+++ b/dwm-flexipatch
--@@ -1 +1 @@
---Subproject commit c553f93b528449ed2e7d4b424f063ef3c1d3d8f6
--+Subproject commit c553f93b528449ed2e7d4b424f063ef3c1d3d8f6-dirty
--diff --git a/dwm/config.h b/dwm/config.h
--index a8f5c30..2d05df5 100644
----- a/dwm/config.h
--+++ b/dwm/config.h
--@@ -242,12 +242,20 @@ static const char *dmenucmd[] = {
-- };
-- static const char *termcmd[]  = { "xfce4-terminal", NULL };
-- 
--+// https://gist.github.com/palopezv/efd34059af6126ad970940bcc6a90f2e
--+static const char *upvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "+5%",     NULL };
--+static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "-5%",     NULL };
--+static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "toggle",  NULL };
--+
-- /* This defines the name of the executable that handles the bar (used for signalling purposes) */
-- #define STATUSBAR "dwmblocks"
-- 
-- 
-- static Key keys[] = {
-- 	/* modifier                     key            function                argument */
--+	{ 0,                            XF86XK_AudioLowerVolume, spawn,        {.v = downvol } },
--+	{ 0,                            XF86XK_AudioMute, spawn,               {.v = mutevol } },
--+	{ 0,                            XF86XK_AudioRaiseVolume, spawn,        {.v = upvol   } },
-- 	{ MODKEY,                       XK_p,          spawn,                  {.v = dmenucmd } },
-- 	{ MODKEY|ShiftMask,             XK_Return,     spawn,                  {.v = termcmd } },
-- 	{ MODKEY,                       XK_b,          togglebar,              {0} },
--diff --git a/dwm/dwm.c b/dwm/dwm.c
--index 5cb533f..2187856 100644
----- a/dwm/dwm.c
--+++ b/dwm/dwm.c
--@@ -41,6 +41,8 @@
-- #endif /* XINERAMA */
-- #include <X11/Xft/Xft.h>
-- 
--+#include <X11/XF86keysym.h>
--+
-- #include "drw.h"
-- #include "util.h"
-- 
--diff --git a/slock-flexipatch b/slock-flexipatch
----- a/slock-flexipatch
--+++ b/slock-flexipatch
--@@ -1 +1 @@
---Subproject commit 9036c899a99e0ae11c7dc4048c77c32283a70905
--+Subproject commit 9036c899a99e0ae11c7dc4048c77c32283a70905-dirty

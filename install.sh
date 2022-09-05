@@ -123,7 +123,7 @@ sed -i "s/\(static const unsigned int gappov\).*/\1 = 10;/" \
   -o ~/git/github/dwm/dwm
 
 # Habilita as teclas de volume
-# git -C dwm apply ../volume-key.patch
+git -C dwm apply ../volume-key.patch
 # git -C dwm apply ../brightness-key.patch
 
 cp dwm.desktop dwm/
