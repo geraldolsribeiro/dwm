@@ -928,7 +928,7 @@ ttyresize(int tw, int th)
 }
 
 void
-ttyhangup()
+ttyhangup(void)
 {
 	/* Send SIGHUP to shell */
 	kill(pid, SIGHUP);
@@ -947,6 +947,12 @@ tattrset(int attr)
 	}
 
 	return 0;
+}
+
+int
+tisaltscr(void)
+{
+	return IS_SET(MODE_ALTSCREEN);
 }
 
 void
@@ -1045,6 +1051,7 @@ tswapscreen(void)
 void
 tscrolldown(int orig, int n)
 {
+
 	if (!orig && historyBufferScroll(-n))
 		return;
 	int i;
@@ -1068,6 +1075,7 @@ tscrolldown(int orig, int n)
 void
 tscrollup(int orig, int n)
 {
+
 	if (!orig && historyBufferScroll(n))
 		return;
 	int i;
