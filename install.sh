@@ -112,7 +112,10 @@ sed -i 's/\("dmenu_run",\)/\1\r"-g", "2",\r"-l", "10",/' \
 
 # https://www.nerdfonts.com/cheat-sheet
 
-sed -i "s/\(static const unsigned int gappov\).*/\1 = 10;/" \
+sed -i "s/\(static const unsigned int gappoh\).*/\1 = 35;/" \
+  dwm-flexipatch/config.h
+
+sed -i "s/\(static const unsigned int gappov\).*/\1 = 35;/" \
   dwm-flexipatch/config.h
 
 #static const char *roficmd[] = { "rofi", "-show", "combi", "-show-icons", NULL };
