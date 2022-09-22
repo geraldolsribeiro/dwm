@@ -259,6 +259,8 @@ git -C sent reset --hard
 git -C sent apply ../sent-dark-background.diff
 git -C sent apply ../sent-progress-bar-1.0.diff
 git -C sent apply ../sent-pdf-2649e8d.diff
+# Resultou em imagem borrada, oposto do esperado
+# git -C sent apply ../sent-bilinearscaling-1.0.diff
 
 
 # ----------------------------------------------------------------------

@@ -5,8 +5,8 @@ static const unsigned int borderpx       = 1;   /* border pixel of windows */
 static const unsigned int snap           = 32;  /* snap pixel */
 static const unsigned int gappih         = 20;  /* horiz inner gap between windows */
 static const unsigned int gappiv         = 10;  /* vert inner gap between windows */
-static const unsigned int gappoh         = 10;  /* horiz outer gap between windows and screen edge */
-static const unsigned int gappov = 10;
+static const unsigned int gappoh = 35;
+static const unsigned int gappov = 35;
 static const int smartgaps_fact          = 1;   /* gap factor when there is only one client; 0 = no gaps, 3 = 3x outer gaps */
 static const char autostartblocksh[]     = "autostart_blocking.sh";
 static const char autostartsh[]          = "autostart.sh";
