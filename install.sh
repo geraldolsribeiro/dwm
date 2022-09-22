@@ -254,6 +254,7 @@ sudo apt install -y farbfeld
 git -C sent clean -xfd
 git -C sent reset --hard
 git -C sent apply ../sent-color.patch
+git -C sent apply ../sent-pdf-2649e8d.diff
 
 
 # ----------------------------------------------------------------------
