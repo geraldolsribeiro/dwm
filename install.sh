@@ -256,7 +256,8 @@ sed -i "s/^#LIGATURES_/LIGATURES_/" st-flexipatch/config.mk
 sudo apt install -y farbfeld
 git -C sent clean -xfd
 git -C sent reset --hard
-git -C sent apply ../sent-color.patch
+git -C sent apply ../sent-dark-background.diff
+git -C sent apply ../sent-progress-bar-1.0.diff
 git -C sent apply ../sent-pdf-2649e8d.diff
 
 
