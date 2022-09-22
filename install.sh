@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 # https://gist.github.com/palopezv/efd34059af6126ad970940bcc6a90f2e
 # palopezv/dwm_config_pulseaudio.h
@@ -114,7 +114,10 @@ sed -i 's/\("dmenu_run",\)/\1\r"-g", "2",\r"-l", "10",/' \
 
 # https://www.nerdfonts.com/cheat-sheet
 
-sed -i "s/\(static const unsigned int gappov\).*/\1 = 10;/" \
+sed -i "s/\(static const unsigned int gappoh\).*/\1 = 35;/" \
+  dwm-flexipatch/config.h
+
+sed -i "s/\(static const unsigned int gappov\).*/\1 = 35;/" \
   dwm-flexipatch/config.h
 
 #static const char *roficmd[] = { "rofi", "-show", "combi", "-show-icons", NULL };
@@ -250,6 +253,19 @@ sed -i "s/^#LIGATURES_/LIGATURES_/" st-flexipatch/config.mk
   -o ~/git/github/dwm/st
 
 # ----------------------------------------------------------------------
+# SENT
+# ----------------------------------------------------------------------
+sudo apt install -y farbfeld
+git -C sent clean -xfd
+git -C sent reset --hard
+git -C sent apply ../sent-dark-background.diff
+git -C sent apply ../sent-progress-bar-1.0.diff
+git -C sent apply ../sent-pdf-2649e8d.diff
+# Resultou em imagem borrada, oposto do esperado
+# git -C sent apply ../sent-bilinearscaling-1.0.diff
+
+
+# ----------------------------------------------------------------------
 # BUILD ALL
 # ----------------------------------------------------------------------
 
@@ -267,6 +283,9 @@ sudo make -C dwmblocks install
 
 make -C st clean all
 sudo make -C st install
+
+make -C sent clean all
+sudo make -C sent install
 
 sudo make -C scripts/ install
 
