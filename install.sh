@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 # https://gist.github.com/palopezv/efd34059af6126ad970940bcc6a90f2e
 # palopezv/dwm_config_pulseaudio.h
@@ -248,6 +248,15 @@ sed -i "s/^#LIGATURES_/LIGATURES_/" st-flexipatch/config.mk
   -o ~/git/github/dwm/st
 
 # ----------------------------------------------------------------------
+# SENT
+# ----------------------------------------------------------------------
+sudo apt install -y farbfeld
+git -C sent clean -xfd
+git -C sent reset --hard
+git -C sent apply ../sent-color.patch
+
+
+# ----------------------------------------------------------------------
 # BUILD ALL
 # ----------------------------------------------------------------------
 
@@ -265,6 +274,9 @@ sudo make -C dwmblocks install
 
 make -C st clean all
 sudo make -C st install
+
+make -C sent clean all
+sudo make -C sent install
 
 sudo make -C scripts/ install
 

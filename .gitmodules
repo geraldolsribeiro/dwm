@@ -16,3 +16,6 @@
 [submodule "st-flexipatch"]
 	path = st-flexipatch
 	url = git@github.com:bakkeby/st-flexipatch.git
+[submodule "sent"]
+	path = sent
+	url = https://git.suckless.org/sent
