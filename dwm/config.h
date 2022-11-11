@@ -21,11 +21,12 @@ static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const int showsystray             = 1;   /* 0 means no systray */
 
 
+
 /* Indicators: see patch/bar_indicators.h for options */
 static int tagindicatortype              = INDICATOR_TOP_LEFT_SQUARE;
 static int tiledindicatortype            = INDICATOR_NONE;
 static int floatindicatortype            = INDICATOR_TOP_LEFT_SQUARE;
-static const char *fonts[]               = { "FiraCode Nerd Font Mono:style=Regular:size=12", "Material Design Icons Desktop:style=Regular:size=10" };
+static const char *fonts[]               = { "FiraCode Nerd Font Mono:style=Regular:size=11", "Material Design Icons Desktop:style=Regular:size=10" };
 static const char dmenufont[]            =  "FiraCode Nerd Font Mono:style=Regular:size=14";
 
 static char c000000[]                    = "#000000"; // placeholder value

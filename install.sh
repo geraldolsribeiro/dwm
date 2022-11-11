@@ -98,10 +98,11 @@ sed -i "s/^#\(XRENDER\)/\1/" \
 # sed -i "s/^#\(PANGOLIB\)/\1/" \
 #   dwm-flexipatch/config.mk
 
+# Terminal
 sed -i 's/\(static const char \*termcmd\[\] *= \).*/\1{ "xfce4-terminal", NULL };/' \
   dwm-flexipatch/config.h
 
-sed -i "s/\(static const char \*fonts\[\] *= \).*/\1{ \"$FIRACODE:size=12\", \"Material Design Icons Desktop:style=Regular:size=10\" };/" \
+sed -i "s/\(static const char \*fonts\[\] *= \).*/\1{ \"$FIRACODE:size=11\", \"Material Design Icons Desktop:style=Regular:size=10\" };/" \
   dwm-flexipatch/config.h
 
 sed -i "s/\(static const char dmenufont\[\] *= \).*/\1 \"$FIRACODE:size=14\";/" \

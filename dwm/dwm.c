@@ -643,6 +643,7 @@ cleanup(void)
 
 
 
+
 	selmon->lt[selmon->sellt] = &foo;
 	for (m = mons; m; m = m->next)
 		while (m->stack)
