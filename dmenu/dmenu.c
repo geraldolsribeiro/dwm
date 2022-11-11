@@ -522,10 +522,10 @@ movewordedge(int dir)
 static void
 keypress(XKeyEvent *ev)
 {
-	char buf[32];
+	char buf[64];
 	int len;
 	struct item * item;
-	KeySym ksym;
+	KeySym ksym = NoSymbol;
 	Status status;
 	int i;
 	struct item *tmpsel;
@@ -535,10 +535,10 @@ keypress(XKeyEvent *ev)
 	switch (status) {
 	default: /* XLookupNone, XBufferOverflow */
 		return;
-	case XLookupChars:
+	case XLookupChars: /* composed string from input method */
 		goto insert;
 	case XLookupKeySym:
-	case XLookupBoth:
+	case XLookupBoth: /* a KeySym and a string are returned: use keysym */
 		break;
 	}
 
