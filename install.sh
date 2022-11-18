@@ -65,6 +65,7 @@ for i in \
 ATTACHASIDE_PATCH \
 AUTOSTART_PATCH \
 BAR_ALPHA_PATCH \
+BAR_HIDEVACANTTAGS_PATCH \
 BAR_POWERLINE_STATUS_PATCH \
 BAR_STATUS2D_PATCH \
 BAR_STATUS2D_XRDB_TERMCOLORS_PATCH \
@@ -83,7 +84,7 @@ TILE_LAYOUT \
 VANITYGAPS_PATCH \
 
 do
-  sed -i "s/^#define $i [01]/#define $i 1/" \
+  sed -i "s|^#define $i [01]|#define $i 1 // GLSR|" \
     dwm-flexipatch/patches.h
 done
 
