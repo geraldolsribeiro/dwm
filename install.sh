@@ -6,6 +6,8 @@
 # fc-list | grep "Fira"
 readonly FIRACODE="FiraCode Nerd Font Mono:style=Regular"
 
+git pull
+
 rm -rf flexipatch-finalizer/
 rm -rf dwm-flexipatch/
 rm -rf dmenu-flexipatch/
