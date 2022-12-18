@@ -133,6 +133,8 @@ sed -i "s/\(static const unsigned int gappov\).*/\1 = 35;/" \
 git -C dwm apply ../volume-key.patch
 # git -C dwm apply ../brightness-key.patch
 
+git -C dwm  apply ../printscreen-key.patch
+
 cp dwm.desktop dwm/
 
 
