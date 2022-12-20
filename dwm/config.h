@@ -264,13 +264,13 @@ static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "togg
 // https://economical-with-words.blogspot.com/2013/02/taking-screenshots-in-dwm.html
 // static const char *scrotcmd[]  = { "scrot", "--exec", "mv $f ~/Pictures/", NULL };
 // static const char *scrotfocusedcmd[]  = { "scrot", "--exec", "mv $f ~/Pictures/", "--focused", NULL };
-static const char *scrotcmd[]  = { "flameshot", "gui", NULL };
-static const char *scrotfocusedcmd[]  = { "flameshot", "screen", NULL };
+static const char *flameshotScreenCmd[]  = { "flameshot", "screen", NULL };
+static const char *flameshotGuiCmd[]  = { "flameshot", "gui", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key            function                argument */
-  { 0,                            XK_Print,      spawn,                  {.v = scrotcmd } },
-  { ShiftMask,                    XK_Print,      spawn,                  {.v = scrotfocusedcmd } },
+  { 0,                            XK_Print,      spawn,                  {.v = flameshotScreenCmd } },
+  { ShiftMask,                    XK_Print,      spawn,                  {.v = flameshotGuiCmd } },
   { ControlMask,                  XK_Print,      spawn,                  SHCMD("sleep 1s;scrot --select") },
 	{ 0,                            XF86XK_AudioLowerVolume,  spawn,       {.v = downvol } },
 	{ 0,                            XF86XK_AudioMute,         spawn,       {.v = mutevol } },
