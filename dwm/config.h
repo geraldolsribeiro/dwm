@@ -262,8 +262,10 @@ static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "-5%"
 static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "toggle",  NULL };
 
 // https://economical-with-words.blogspot.com/2013/02/taking-screenshots-in-dwm.html
-static const char *scrotcmd[]  = { "scrot", "--exec", "mv $f ~/Pictures/", NULL };
-static const char *scrotfocusedcmd[]  = { "scrot", "--exec", "mv $f ~/Pictures/", "--focused", NULL };
+// static const char *scrotcmd[]  = { "scrot", "--exec", "mv $f ~/Pictures/", NULL };
+// static const char *scrotfocusedcmd[]  = { "scrot", "--exec", "mv $f ~/Pictures/", "--focused", NULL };
+static const char *scrotcmd[]  = { "flameshot", "gui", NULL };
+static const char *scrotfocusedcmd[]  = { "flameshot", "screen", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key            function                argument */
