@@ -78,5 +78,7 @@ fuzzymatch(void)
 		free(fuzzymatches);
 	}
 	curr = sel = matches;
+
+
 	calcoffsets();
 }

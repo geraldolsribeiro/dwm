@@ -10,6 +10,10 @@ drawhighlights(struct item *item, char *output, int x, int y, int maxw)
 	if (!(strlen(itemtext) && strlen(text)))
 		return;
 
+	/* Do not highlight items scheduled for output */
+	if (item->out)
+		return;
+
 	drw_setscheme(drw, scheme[item == sel
 	                   ? SchemeSelHighlight
 	                   : SchemeNormHighlight]);
