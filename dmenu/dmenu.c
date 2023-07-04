@@ -1054,7 +1054,10 @@ main(int argc, char *argv[])
 	int fast = 0;
 
 
-	for (i = 1; i < argc; i++)
+	for (i = 1; i < argc; i++) {
+		if (argv[i][0] == '\0')
+			continue;
+
 		/* these options take no arguments */
 		if (!strcmp(argv[i], "-v")) {      /* prints version information */
 			puts("dmenu-"VERSION);
@@ -1110,8 +1113,10 @@ main(int argc, char *argv[])
 			embed = argv[++i];
 		else if (!strcmp(argv[i], "-bw"))  /* border width around dmenu */
 			border_width = atoi(argv[++i]);
-		else
+		else {
 			usage();
+		}
+	}
 
 	if (!setlocale(LC_CTYPE, "") || !XSupportsLocale())
 		fputs("warning: no locale support\n", stderr);
