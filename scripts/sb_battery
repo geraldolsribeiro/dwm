@@ -1,0 +1,68 @@
+#!/bin/bash -e
+
+# Prints all batteries, their percentage remaining and an emoji corresponding
+# to charge status (🔌 for plugged up, 🔋 for discharging on battery, etc.).
+
+# notify() {
+# 	notify-send -i battery -h string:x-canonical-private-synchronous:battery "Battery" "$1" -t 4000
+# }
+#
+# case $BLOCK_BUTTON in
+# 	1) notify "$(acpi -b | awk -F ': |, ' '{printf "%s\n%s\n", $2, $4}')" ;;
+# 	6) "$TERMINAL" -e "$EDITOR" "$0" ;;
+# esac
+
+# . sb-theme
+
+ret=""
+
+# Loop through all attached batteries and format the info
+for battery in $( find /sys/class/power_supply/ -name "/BAT?*" ); do
+  # If non-first battery, print a space separator.
+  [ -n "${capacity+x}" ] && ret+=" "
+
+  capacity="$(cat "$battery/capacity" 2>&1)"
+  if [ "$capacity" -gt 90 ]; then
+    icon=""
+  elif [ "$capacity" -gt 60 ]; then
+    icon=""
+  elif [ "$capacity" -gt 40 ]; then
+    icon=""
+  elif [ "$capacity" -gt 10 ]; then
+    icon=""
+  else
+    icon=""
+  fi
+
+  # Sets up the status and capacity
+  case "$(cat "$battery/status" 2>&1)" in
+    Full)
+      icon=""
+      color="^c#00ff00^"
+      ;;
+    Discharging)
+      if [ "$capacity" -le 20 ]; then
+        icon=""
+        color="^c#ff0000^"
+      else
+        color="^c#ffff33^"
+      fi
+      ;;
+    Charging)
+      icon=""
+      color="^c#77aaff^"
+      ;;
+    "Not charging")
+      icon=" "
+      ;;
+    Unknown)
+      icon=" "
+      ;;
+    *)
+      echo "Erro: $battery/status" >> /tmp/dwmblocks.log
+      exit 1 ;;
+  esac
+  ret+="$color$icon$capacity%"
+done
+
+echo "$ret"

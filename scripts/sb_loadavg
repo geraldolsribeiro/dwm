@@ -1,0 +1,22 @@
+#!/bin/bash
+# ----------------------------------------------------------------------
+# Copyright (C) 2018-2023 Geraldo Ribeiro <geraldo@intmain.io>
+# ----------------------------------------------------------------------
+
+load=$(cut -d ' ' -f3 /proc/loadavg)
+load=$( echo "($load * 100) / 1" | bc )
+
+if [ "$load" -gt "100" ] ; then
+  color="#F0F0FF"
+elif [ "$load" -gt "80" ] ; then
+  color="#d890f0"
+elif [ "$load" -gt "50" ] ; then
+  color="#C030F0"
+elif [ "$load" -gt "20" ] ; then
+  color="#979797"
+else
+  color="#545454"
+fi
+
+icon="⚙"
+echo "^c${color}^$icon$load%^d^"

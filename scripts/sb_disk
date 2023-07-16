@@ -1,0 +1,10 @@
+#!/bin/bash
+# ----------------------------------------------------------------------
+# Copyright (C) 2018-2023 Geraldo Ribeiro <geraldo@intmain.io>
+# ----------------------------------------------------------------------
+
+hdd=$( df -m 2>/dev/null | grep -v "/dev/loop" | grep "^/dev/" | sort -rnk 3 )
+hdd1="$( echo "$hdd" | awk 'NR==1 {printf("%dG %d%%"), $3/1024, $5;}')"
+hdd2="$( echo "$hdd" | awk 'NR==2 {printf("%dG %d%%"), $3/1024, $5;}')"
+icon=""
+printf "^c#aaffff^%s%s|%s%s^d^\\n" "$icon" "$hdd1" "$icon" "$hdd2"

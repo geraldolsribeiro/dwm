@@ -1,0 +1,15 @@
+#!/bin/bash
+# ----------------------------------------------------------------------
+# Copyright (C) 2018-2023 Geraldo Ribeiro <geraldo@intmain.io>
+# ----------------------------------------------------------------------
+
+total=$( free -h | grep "Mem" | awk  '{ print $2 }' )
+used=$( free -h | grep "Mem" | awk  '{ print $3 }' )
+swap=$( free -h | grep "Swap" | awk  '{ print $3 }' )
+
+if [[ "$swap" == "0B" ]]; then
+  printf "^c#aaaaff^%s^d^/^c#00ff00^%s\\n" "$used" "$total"
+else
+  printf "^c#aaaaff^%s^d^/^c#00ff00^%s ^c#ff0000^%s^d^\\n" "$used" "$total" "$swap"
+fi
+

@@ -6,6 +6,8 @@
 # fc-list | grep "Fira"
 readonly FIRACODE="FiraCode Nerd Font Mono:style=Regular"
 
+sudo apt install libx11-dev xautolock pasystray
+
 git pull
 
 rm -rf flexipatch-finalizer/
