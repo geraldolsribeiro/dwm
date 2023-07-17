@@ -8,7 +8,7 @@ readonly FIRACODE="FiraCode Nerd Font Mono:style=Regular"
 
 git pull
 
-sudo apt install libx11-dev libxft-dev libxinerama-dev libxrandr-dev xautolock pasystray
+sudo apt install libx11-dev libxft-dev libxinerama-dev libxrandr-dev libfreetype-dev xautolock pasystray
 
 rm -rf flexipatch-finalizer/
 rm -rf dwm-flexipatch/
