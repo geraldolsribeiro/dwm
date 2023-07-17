@@ -268,7 +268,7 @@ git -C sent clean -xfd
 git -C sent reset --hard
 git -C sent apply ../sent-dark-background.diff
 git -C sent apply ../sent-progress-bar-1.0.diff
-git -C sent apply ../sent-pdf-2649e8d.diff
+git -C sent apply ../sent-pdf-e3b86c2.diff
 # Resultou em imagem borrada, oposto do esperado
 # git -C sent apply ../sent-bilinearscaling-1.0.diff
 
