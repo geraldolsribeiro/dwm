@@ -8,7 +8,7 @@ readonly FIRACODE="FiraCode Nerd Font Mono:style=Regular"
 
 git pull
 
-sudo apt install libx11-dev libxft-dev libxinerama-dev libxrandr-dev libfreetype-dev xautolock pasystray
+sudo apt install libx11-dev libxft-dev libxinerama-dev libxrandr-dev libfreetype-dev libcairo2-dev xautolock pasystray
 
 rm -rf flexipatch-finalizer/
 rm -rf dwm-flexipatch/
@@ -269,6 +269,7 @@ git -C sent reset --hard
 git -C sent apply ../sent-dark-background.diff
 git -C sent apply ../sent-progress-bar-1.0.diff
 git -C sent apply ../sent-pdf-e3b86c2.diff
+git -C sent apply ../sent-fix-freetype-flags.patch
 # Resultou em imagem borrada, oposto do esperado
 # git -C sent apply ../sent-bilinearscaling-1.0.diff
 

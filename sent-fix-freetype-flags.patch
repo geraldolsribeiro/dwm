@@ -1,0 +1,13 @@
+diff --git a/config.mk b/config.mk
+index 9174687..d6408ce 100644
+--- a/config.mk
++++ b/config.mk
+@@ -16,7 +16,7 @@ X11LIB = /usr/X11R6/lib
+ INCS = -I. -I/usr/include -I/usr/include/freetype2 -I${X11INC}
+ LIBS = -L/usr/lib -lc -lm -L${X11LIB} -lXft -lfontconfig -lX11 -lcairo
+ # OpenBSD (uncomment)
+-INCS = -I. -I${X11INC} -I${X11INC}/freetype2 `${PKG_CONFIG} --cflags cairo`
++INCS = -I. -I${X11INC} `${PKG_CONFIG} --cflags freetype2` `${PKG_CONFIG} --cflags cairo`
+ LIBS += -L/usr/local/lib
+ # FreeBSD (uncomment)
+ #INCS = -I. -I/usr/local/include -I/usr/local/include/freetype2 -I${X11INC}
