@@ -6,9 +6,9 @@
 # fc-list | grep "Fira"
 readonly FIRACODE="FiraCode Nerd Font Mono:style=Regular"
 
-sudo apt install libx11-dev libxft-dev libxinerama-dev xautolock pasystray
-
 git pull
+
+sudo apt install libx11-dev libxft-dev libxinerama-dev xautolock pasystray
 
 rm -rf flexipatch-finalizer/
 rm -rf dwm-flexipatch/
