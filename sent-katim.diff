@@ -1,0 +1,13 @@
+diff --git a/sent.c b/sent.c
+index 66b9f42..b2fcd5a 100644
+--- a/sent.c
++++ b/sent.c
+@@ -582,6 +582,8 @@ xdraw(void)
+ 			         (xw.w * idx)/(slidecount - 1), progressheight,
+ 			         1, 0);
+ 		}
++    XSetForeground(d->dpy, d->gc, 0xFF4713 );
++    XFillRectangle(d->dpy, d->drawable, d->gc, xw.w-180, 0, 180, 30);
+ 		drw_map(d, xw.win, 0, 0, xw.w, xw.h);
+ 	} else {
+ 		if (!(im->state & SCALED))
