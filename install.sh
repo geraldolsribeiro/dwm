@@ -269,10 +269,12 @@ sed -i "s/^#LIGATURES_/LIGATURES_/" st-flexipatch/config.mk
 sudo apt install -y farbfeld
 git -C sent clean -xfd
 git -C sent reset --hard
+git -C sent pull
 git -C sent apply ../sent-dark-background.diff
 git -C sent apply ../sent-progress-bar-1.0.diff
 git -C sent apply ../sent-pdf-e3b86c2.diff
 git -C sent apply ../sent-fix-freetype-flags.patch
+# git -C sent apply ../sent-katim.diff
 # Resultou em imagem borrada, oposto do esperado
 # git -C sent apply ../sent-bilinearscaling-1.0.diff
 
