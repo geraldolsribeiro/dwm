@@ -3,7 +3,7 @@
 # Copyright (C) 2018-2023 Geraldo Ribeiro <geraldo@intmain.io>
 # ----------------------------------------------------------------------
 
-load=$(cut -d ' ' -f3 /proc/loadavg)
+load=$(cut -d ' ' -f1 /proc/loadavg)
 load=$( echo "($load * 100) / 1" | bc )
 
 if [ "$load" -gt "100" ] ; then
