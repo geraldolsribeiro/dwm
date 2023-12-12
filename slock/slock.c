@@ -395,7 +395,7 @@ main(int argc, char **argv) {
 	char **font_names;
 	ARGBEGIN {
 	case 'v':
-		fprintf(stderr, "slock-"VERSION"\n");
+		puts("slock-"VERSION);
 		return 0;
 	case 'm':
 		message = EARGF(usage());

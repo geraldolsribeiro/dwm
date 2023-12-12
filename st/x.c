@@ -789,7 +789,7 @@ xloadcols(void)
 int
 xgetcolor(int x, unsigned char *r, unsigned char *g, unsigned char *b)
 {
-	if (!BETWEEN(x, 0, dc.collen))
+	if (!BETWEEN(x, 0, dc.collen - 1))
 		return 1;
 
 	*r = dc.col[x].color.red >> 8;
@@ -804,7 +804,7 @@ xsetcolorname(int x, const char *name)
 {
 	Color ncolor;
 
-	if (!BETWEEN(x, 0, dc.collen))
+	if (!BETWEEN(x, 0, dc.collen - 1))
 		return 1;
 
 	if (!xloadcolor(x, name, &ncolor))
@@ -1281,7 +1281,7 @@ xmakeglyphfontspecs(XftGlyphFontSpec *specs, const Glyph *glyphs, int len, int x
 	HbTransformData shaped = { 0 };
 
 	/* Initial values. */
-	mode = prevmode = glyphs[0].mode;
+	mode = prevmode = glyphs[0].mode & ~ATTR_WRAP;
 	xresetfontsettings(mode, &font, &frcflags);
 
 	for (i = 0, xp = winx, yp = winy + font->ascent; i < len; ++i)
