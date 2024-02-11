@@ -19,3 +19,6 @@
 [submodule "sent"]
 	path = sent
 	url = https://git.suckless.org/sent
+[submodule "surf"]
+	path = surf
+	url = git://git.suckless.org/surf

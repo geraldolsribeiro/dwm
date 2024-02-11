@@ -278,6 +278,21 @@ git -C sent apply ../sent-fix-freetype-flags.patch
 # Resultou em imagem borrada, oposto do esperado
 # git -C sent apply ../sent-bilinearscaling-1.0.diff
 
+# ----------------------------------------------------------------------
+# SURF
+# ----------------------------------------------------------------------
+
+if [ ! -f surf-xdg-2.0.diff ]; then
+  wget https://surf.suckless.org/patches/xdg/surf-xdg-2.0.diff
+fi
+
+sudo apt install -y libgcr-3-dev
+git -C surf clean -xfd
+git -C surf reset --hard
+git -C surf pull
+git -C surf apply ../surf-config-mk.diff
+git -C surf apply ../surf-xdg-2.0.diff
+
 
 # ----------------------------------------------------------------------
 # BUILD ALL
@@ -300,6 +315,9 @@ sudo make -C st install
 
 make -C sent clean all
 sudo make -C sent install
+
+make -C surf clean all
+sudo make -C surf install
 
 sudo make -C scripts/ install
 
