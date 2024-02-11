@@ -1,0 +1,13 @@
+diff --git a/config.mk b/config.mk
+index 2eb9fb0..462f51f 100644
+--- a/config.mk
++++ b/config.mk
+@@ -9,7 +9,7 @@ MANPREFIX = $(PREFIX)/share/man
+ LIBPREFIX = $(PREFIX)/lib
+ LIBDIR = $(LIBPREFIX)/surf
+ 
+-X11INC = `pkg-config --cflags x11`
++X11INC = `pkg-config --cflags x11 glib-2.0 gdk-3.0 atk`
+ X11LIB = `pkg-config --libs x11`
+ 
+ GTKINC = `pkg-config --cflags gtk+-3.0 gcr-3 webkit2gtk-4.0`
