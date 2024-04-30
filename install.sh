@@ -289,6 +289,7 @@ fi
 sudo apt install -y libgcr-3-dev
 git -C surf clean -xfd
 git -C surf reset --hard
+git -C surf checkout surf-webkit2
 git -C surf pull
 git -C surf apply ../surf-config-mk.diff
 git -C surf apply ../surf-xdg-2.0.diff
